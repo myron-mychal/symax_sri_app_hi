@@ -263,7 +263,7 @@ uint8_t module_Motor_Com_u32(uint8_t drv_id_u8, uint8_t prev_state_u8, uint8_t n
 	  
 		blocks_to_transmit_u8++;	// increment counter to next transmit block
 		tt_HarmonicUpdateTime = getSysCount() + TIME_BETWEEN_STAGGERED_HI_TX_BLOCKS;
-      	return_state_u8 = SpdUpdate;  // revert back to AppStart state
+      	return_state_u8 = AppStart;  // revert back to AppStart state
                 harmonic_data_cnt++;
             
 	  	break;	 
@@ -278,10 +278,15 @@ uint8_t module_Motor_Com_u32(uint8_t drv_id_u8, uint8_t prev_state_u8, uint8_t n
 		unsigned char harmonicOffsetsTx[23] = {0x55, 0x10, 0x33, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
                                                     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xCC, 0xCC};
 		unsigned int harmonicOffsetsTxLen = 23;// sizeof(harmonicOffsetsTx);
-		for(index_u8 = 0; index_u8 < 16; index_u8+=2) {
-		  harmonicOffsetsTx[5+index_u8] = (unsigned char) (((hi_angle_offset_u16[index_u8/2]) & 0xff00) >> 8);
-		  harmonicOffsetsTx[6+index_u8] = (unsigned char) (((hi_angle_offset_u16[index_u8/2]) & 0x00ff) >> 0);
-		}	  
+                unsigned char har_offset_index=5;
+                
+		for(index_u8 = 0; index_u8 < 8; index_u8++)
+                {
+		  harmonicOffsetsTx[har_offset_index] = (unsigned char) (((hi_angle_offset_u16[index_u8]) & 0xff00) >> 8);
+		 har_offset_index++;
+                  harmonicOffsetsTx[har_offset_index] = (unsigned char) (((hi_angle_offset_u16[index_u8]) & 0x00ff) >> 0);
+		har_offset_index++;
+                }	  
 		RingBuf_WriteBlock((*usart2Control_AppLocal).seqMemTX_u32, harmonicOffsetsTx, &harmonicOffsetsTxLen);
                 harmonic_data_cnt++;
 	         break;
@@ -302,7 +307,7 @@ uint8_t module_Motor_Com_u32(uint8_t drv_id_u8, uint8_t prev_state_u8, uint8_t n
 		blocks_to_transmit_u8++;	// increment couner to next transmit block
 		//blocks_to_transmit_u8 = 0;
 		tt_HarmonicUpdateTime = getSysCount() + TIME_BETWEEN_STAGGERED_HI_TX_BLOCKS;
-      	return_state_u8 = SpdUpdate;  // revert back to AppStart state
+      	return_state_u8 = AppStart;  // revert back to AppStart state
 	  	break;	 
 	  }
   
@@ -314,10 +319,13 @@ uint8_t module_Motor_Com_u32(uint8_t drv_id_u8, uint8_t prev_state_u8, uint8_t n
 		unsigned char harmonicMinSpeedsTx[23] = {0x55, 0x10, 0x35, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
                                                        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xCC, 0xCC};
 		unsigned int harmonicMinSpeedsTxLen = 23;//sizeof(harmonicMinSpeedsTx);
-		for(index_u8 = 0; index_u8 < 16; index_u8+=2) {
-		  harmonicMinSpeedsTx[5+index_u8] = (unsigned char) (((hi_min_speed_u16[index_u8/2]) & 0xff00) >> 8);
-		  harmonicMinSpeedsTx[6+index_u8] = (unsigned char) (((hi_min_speed_u16[index_u8/2]) & 0x00ff) >> 0);
-		}	  
+		unsigned char harmonic_minspeed_index=5;
+                for(index_u8 = 0; index_u8 < 8; index_u8++) {
+		  harmonicMinSpeedsTx[harmonic_minspeed_index] = (unsigned char) (((hi_min_speed_u16[index_u8]) & 0xff00) >> 8);
+		  harmonic_minspeed_index++;
+                  harmonicMinSpeedsTx[harmonic_minspeed_index] = (unsigned char) (((hi_min_speed_u16[index_u8]) & 0x00ff) >> 0);
+		  harmonic_minspeed_index++;
+                }	  
 		RingBuf_WriteBlock((*usart2Control_AppLocal).seqMemTX_u32, harmonicMinSpeedsTx, &harmonicMinSpeedsTxLen);
 	        harmonic_data_cnt++;
                 
@@ -329,10 +337,14 @@ uint8_t module_Motor_Com_u32(uint8_t drv_id_u8, uint8_t prev_state_u8, uint8_t n
 		unsigned char harmonicMaxSpeedsTx[23] = {0x55, 0x10, 0x36, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
                                                        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xCC, 0xCC};
 		unsigned int harmonicMaxSpeedsTxLen = 23;//sizeof(harmonicMaxSpeedsTx);
-		for(index_u8 = 0; index_u8 < 16; index_u8+=2) {
-		  harmonicMaxSpeedsTx[5+index_u8] = (unsigned char) (((hi_max_speed_u16[index_u8/2]) & 0xff00) >> 8);
-		  harmonicMaxSpeedsTx[6+index_u8] = (unsigned char) (((hi_max_speed_u16[index_u8/2]) & 0x00ff) >> 0);
-		}	  
+                unsigned char harmonic_maxspeed_index=5;
+		
+                for(index_u8 = 0; index_u8 < 8; index_u8++) {
+		  harmonicMaxSpeedsTx[harmonic_maxspeed_index] = (unsigned char) (((hi_max_speed_u16[index_u8]) & 0xff00) >> 8);
+		  harmonic_maxspeed_index++;
+                  harmonicMaxSpeedsTx[harmonic_maxspeed_index] = (unsigned char) (((hi_max_speed_u16[index_u8]) & 0x00ff) >> 0);
+		 harmonic_maxspeed_index++;
+                }	  
 		RingBuf_WriteBlock((*usart2Control_AppLocal).seqMemTX_u32, harmonicMaxSpeedsTx, &harmonicMaxSpeedsTxLen);
 		harmonic_data_cnt=0;
                 }
@@ -340,7 +352,7 @@ uint8_t module_Motor_Com_u32(uint8_t drv_id_u8, uint8_t prev_state_u8, uint8_t n
 	  }
 	  
 	  tt_HarmonicUpdateTime = getSysCount() + TIME_BETWEEN_STAGGERED_HI_TX_BLOCKS;
-      return_state_u8 = SpdUpdate;  // revert back to AppStart state
+      return_state_u8 = AppStart;  // revert back to AppStart state
 	  
 	  break;  
 	}
