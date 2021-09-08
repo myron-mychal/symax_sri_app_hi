@@ -112,19 +112,17 @@ void MX_USART1_UART_Init(void)
 }
 
 void Set_DE_Mode(modbus_direction_t direction) {
-  if(direction == MODBUS_FOLLOWER_TX) {
-	if(MODBUS_DE_FOLLOWER_TX == ACTIVE_HIGH)
-	  LL_GPIO_SetOutputPin(MODBUS_EN_GPIO_Port, MODBUS_EN_Pin); 		// Follower in TX mode
-	else
-	  LL_GPIO_ResetOutputPin(MODBUS_EN_GPIO_Port, MODBUS_EN_Pin);  	// Follower in RX mode
+  
+  if(direction == MODBUS_FOLLOWER_TX) 
+  {
+	
+	 LL_GPIO_SetOutputPin(MODBUS_EN_GPIO_Port, MODBUS_EN_Pin); 		// Follower in TX mode
+	
   }
-  else {
-	if(MODBUS_DE_FOLLOWER_RX == ACTIVE_HIGH)
-	  LL_GPIO_SetOutputPin(MODBUS_EN_GPIO_Port, MODBUS_EN_Pin); 		// Follower in RX mode
-	else
+  else {	
 	  LL_GPIO_ResetOutputPin(MODBUS_EN_GPIO_Port, MODBUS_EN_Pin);  	// Follower in TX mode
   }
-};
+}
 
 void Usart1_Init(){
   MX_USART1_UART_Init();
