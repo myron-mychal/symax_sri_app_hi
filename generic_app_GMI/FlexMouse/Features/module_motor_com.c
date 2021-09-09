@@ -219,7 +219,7 @@ uint8_t module_Motor_Com_u32(uint8_t drv_id_u8, uint8_t prev_state_u8, uint8_t n
 		// Enable/Disable
             if(harmonic_data_cnt==0)
             {
-		unsigned char harmonicEnableTx[8] = {0x55, 0x01, 0x30, 0x00, 0x00, hi_is_harmonic_injection_allowed_hi_u8, 0xCC, 0xCC};
+		unsigned char harmonicEnableTx[8] = {0x55, 0x01, 0x30, 0x00, 0x00, 0xff, 0xCC, 0xCC};
 		unsigned int harmonicEnableTxLen = 8;//sizeof(harmonicEnableTx);
               harmonicEnableTx[5] = (unsigned char) (hi_is_harmonic_injection_allowed_hi_u8);
 		RingBuf_WriteBlock((*usart2Control_AppLocal).seqMemTX_u32, harmonicEnableTx, &harmonicEnableTxLen);
